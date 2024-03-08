@@ -12,15 +12,16 @@ uint32_t count = 0;
 struct Button{
   const uint8_t PIN;
   uint32_t numberKeyPresses;
+  uint8_t bounceTime; // Tiempo en ms para el debouncing
   bool buttonState;
   bool pressed;
 };
 
-Button button1 = {BUTTON1_PIN, 0, false, false};
-Button button2 = {BUTTON2_PIN, 0, false, false};
+Button button1 = {BUTTON1_PIN, 0, 50, false, false};
+Button button2 = {BUTTON2_PIN, 0, 50, false, false};
 
 void IRAM_ATTR isr() {
-  Serial.println("Interrupted by button 2");
+  Serial.println("Interrupted by button 2, set count to 0");
   count = 0;
 }
 
@@ -30,6 +31,7 @@ void setup(){
   pinMode(button2.PIN, INPUT_PULLUP);
   pinMode(LED_PIN, OUTPUT);
   attachInterrupt(button2.PIN, isr, FALLING);
+  Serial.println("Programa inicicado");
 }
 
 void loop(){
@@ -41,13 +43,13 @@ void loop(){
     button1.pressed = true;
     Serial.print("Contador: ");
     Serial.println(count);
-    digitalWrite(LED_PIN, HIGH);
-    delay(50);
+    digitalWrite(LED_PIN, HIGH); // Encendemos el LED
+    delay(button1.bounceTime); // Debouncing
 
   }
   if (button1.buttonState == HIGH && button1.pressed) {
     digitalWrite(LED_PIN, LOW);
     button1.pressed = false;
-    delay(50);
+    delay(button1.bounceTime); // Debouncing
   }
 }
