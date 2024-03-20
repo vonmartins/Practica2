@@ -114,7 +114,7 @@ En esta práctica, se utiliza un timer en Arduino para generar interrupciones pe
 
 ## Código Utilizado
 
-### `main2.cpp`
+### `main.cpp`
 ```cpp
 #include <Arduino.h>
 
